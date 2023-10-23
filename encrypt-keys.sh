@@ -7,8 +7,6 @@ then
     exit
 fi
 
-ansible-vault encrypt \
-ssh/.ssh/id_ed25519 \
-ssh/.ssh/id_ed25519_andes \
-ssh/.ssh/id_ed25519_devsu \
-ssh/.ssh/id_rsa
+ssh_keys=($(ls ssh/.ssh/ | grep ".pub" | sed -e 's/\.pub$//' -e "s|^|ssh/.ssh/|"))
+
+ansible-vault encrypt ${ssh_keys[@]}
