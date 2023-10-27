@@ -5,7 +5,7 @@ To include all the keys, install git, gnu stow & ansible
 To stow all the keys run:
 
 ```bash
-stow --target=$HOME */
+stow --target=$HOME ssh/
 ```
 
 To stow only some keys run:
