@@ -1,0 +1,15 @@
+- name: Setup Machine
+  hosts: localhost
+  # become: yes # Use sudo to gain root privileges
+  become_method: sudo
+  tasks:
+    - include: tasks/brew-setup.yml
+    # - include: tasks/zsh-setup.yml
+    # - include: tasks/install-ssh-keys.yml
+    # - include: tasks/decrypt-files.yml
+    # - include: tasks/core-setup.yml
+    # - include: tasks/node-setup.yml
+    # - include: tasks/install-npm-packages.yml
+    # - include: tasks/nvim-setup.yml
+    # - include: tasks/stow-setup.yml
+# Add any other tasks as needed
