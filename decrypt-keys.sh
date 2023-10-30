@@ -10,3 +10,4 @@ fi
 ssh_keys=($(ls ssh/.ssh/ | grep ".pub" | sed -e 's/\.pub$//' -e "s|^|ssh/.ssh/|"))
 
 ansible-vault decrypt ${ssh_keys[@]}
+git update-index --skip-worktree ${ssh_keys[@]}
