@@ -1,0 +1,18 @@
+- name: Verify Cargo installation
+  shell: which cargo
+  register: cargo_exists
+
+- name: Install Cargo
+  become: no
+  shell: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain none
+  when: cargo_exists.rc == 1
+
+- name: Install Cargo packages
+  become: no
+  vars:
+    cargo_packages:
+      - tmux-session-manager
+      - cargo-update
+  homebrew:
+    name: "{{ cargo_packages }}"
+  ignore_errors: yes
