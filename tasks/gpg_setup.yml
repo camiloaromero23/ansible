@@ -28,3 +28,6 @@
 - name: Delete decrypted keys
   shell: rm -rdf "{{item.path | dirname}}/decrypted/*"
   with_items: "{{ vaulted_files.files }}"
+
+- name: Restart gpg-agent
+  shell: gpgconf --kill gpg-agent
