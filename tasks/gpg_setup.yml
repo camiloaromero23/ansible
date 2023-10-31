@@ -1,12 +1,30 @@
-- name: Decrypt files in a folder
+- name: Verify Pinentry-mac installation
+  shell: which pinentry-mac
+
+- name: List GPG files
   ansible.builtin.find:
     paths: ./gpg/ # Replace with the folder containing your vaulted files
     recurse: yes
-    patterns: "*.*" # Adjust the file extension as needed
+    patterns: "*.gpg" # Adjust the file extension as needed
   register: vaulted_files
+
+- name: Make decrypted directory
+  shell: cd gpg && mkdir decrypted
 
 - name: Decrypt and move each encrypted file
   ansible.builtin.command: ansible-vault decrypt "{{ item.path }}" --output "{{ item.path | dirname }}/decrypted/{{ item.path | basename }}"
   with_items: "{{ vaulted_files.files }}"
   delegate_to: localhost # Ensure it's executed on the local machine
   when: item.path is defined
+
+- name: Import keys
+  with_items: "{{ vaulted_files.files }}"
+  shell: gpg --import "{{item.path | dirname }}/decrypted/{{item.path | basename}}"
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Delete decrypted keys
+  shell: rm -rdf "{{item.path | dirname}}/decrypted/*"
+  with_items: "{{ vaulted_files.files }}"
