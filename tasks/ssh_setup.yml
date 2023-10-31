@@ -1,0 +1,27 @@
+- name: List ssh keys files
+  ansible.builtin.find:
+    paths: ./ssh/.ssh/ # Replace with the folder containing your vaulted files
+    recurse: yes
+    patterns: "^id_[^.]*$" # Adjust the file extension as needed
+    use_regex: yes
+  register: vaulted_files
+
+- name: Decrypt each encrypted file
+  ansible.builtin.command: ansible-vault decrypt "{{ item.path }}"
+  with_items: "{{ vaulted_files.files }}"
+  delegate_to: localhost # Ensure it's executed on the local machine
+  when: item.path is defined
+
+- name: Stow keys
+  shell: stow --target=$HOME ssh/
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Avoid git repo to be dirty
+  shell: git update-index --skip-worktree "{{ item.path }}"
+  with_items: "{{ vaulted_files.files }}"
+
+- name: Add ssh keys
+  shell: ssh-add
