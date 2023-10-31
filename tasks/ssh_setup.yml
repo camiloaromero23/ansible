@@ -6,8 +6,14 @@
     use_regex: yes
   register: vaulted_files
 
+- name: Install pexpect
+  command: pip3 install pexpect
+
 - name: Decrypt each encrypted file
-  ansible.builtin.command: ansible-vault decrypt "{{ item.path }}"
+  expect:
+    command: ansible-vault decrypt {{ item.path }}
+    responses:
+      (?i)password: "{{ password }}"
   with_items: "{{ vaulted_files.files }}"
   delegate_to: localhost # Ensure it's executed on the local machine
   when: item.path is defined
@@ -23,5 +29,11 @@
   shell: git update-index --skip-worktree "{{ item.path }}"
   with_items: "{{ vaulted_files.files }}"
 
+- name: Restart ssh agent
+  shell: eval "$(ssh-agent -s)"
+  ignore_errors: true
+
 - name: Add ssh keys
-  shell: ssh-add
+  shell: ssh-add ~/.ssh/{{ item.path | basename }}
+  with_items: "{{ vaulted_files.files }}"
+  ignore_errors: true

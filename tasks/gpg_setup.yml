@@ -11,8 +11,14 @@
 - name: Make decrypted directory
   shell: cd gpg && mkdir decrypted
 
+- name: Install pexpect
+  command: pip3 install pexpect
+
 - name: Decrypt and move each encrypted file
-  ansible.builtin.command: ansible-vault decrypt "{{ item.path }}" --output "{{ item.path | dirname }}/decrypted/{{ item.path | basename }}"
+  expect:
+    command: ansible-vault decrypt "{{ item.path }}" --output "{{ item.path | dirname }}/decrypted/{{ item.path | basename }}"
+    responses:
+      (?i)password: "{{ password }}"
   with_items: "{{ vaulted_files.files }}"
   delegate_to: localhost # Ensure it's executed on the local machine
   when: item.path is defined
