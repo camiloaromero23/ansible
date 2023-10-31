@@ -4,12 +4,11 @@
   become_method: sudo
   tasks:
     - include: tasks/brew-setup.yml
-    # - include: tasks/zsh-setup.yml
-    # - include: tasks/install-ssh-keys.yml
-    # - include: tasks/decrypt-files.yml
-    # - include: tasks/core-setup.yml
-    # - include: tasks/node-setup.yml
-    # - include: tasks/install-npm-packages.yml
-    # - include: tasks/nvim-setup.yml
-    # - include: tasks/stow-setup.yml
+    - include: tasks/cargo-setup.yml
+    - include: tasks/ssh_setup.yml
+    - include: tasks/node-setup.yml
+    - include: tasks/zsh-setup.yml
+    - include: tasks/gpg_setup.yml
+    - include: tasks/pass-setup.yml
+    - include: tasks/dotfiles-setup.yml
 # Add any other tasks as needed
