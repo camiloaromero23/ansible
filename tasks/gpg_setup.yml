@@ -23,6 +23,9 @@
   delegate_to: localhost # Ensure it's executed on the local machine
   when: item.path is defined
 
+- name: Restart gpg-agent
+  shell: gpgconf --kill gpg-agent
+
 - name: Import keys
   with_items: "{{ vaulted_files.files }}"
   shell: gpg --import "{{item.path | dirname }}/decrypted/{{item.path | basename}}"
