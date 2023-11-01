@@ -5,11 +5,12 @@
   failed_when: brew_exists.rc != 1 and brew_exists.rc != 0
 
 - name: Install Brew
-  become: yes
+  become: no
   shell: NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   when: brew_exists.rc == 1
 
 - name: Update Brew
+  become: no
   homebrew:
     update_homebrew: true
     upgrade_all: true
