@@ -1,10 +1,17 @@
 - name: Verify Cargo installation
   shell: which cargo
   register: cargo_exists
+  ignore_errors: true
+  failed_when: cargo_exists.rc != 1 and cargo_exists.rc != 0
 
 - name: Install Cargo
   become: no
   shell: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain none
+  when: cargo_exists.rc == 1
+
+- name: Install Rust
+  become: no
+  shell: rustup default stable
   when: cargo_exists.rc == 1
 
 - name: Install Cargo packages
@@ -13,6 +20,5 @@
     cargo_packages:
       - tmux-session-manager
       - cargo-update
-  homebrew:
+  community.general.cargo:
     name: "{{ cargo_packages }}"
-  ignore_errors: yes
