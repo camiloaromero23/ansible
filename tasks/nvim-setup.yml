@@ -1,0 +1,8 @@
+- name: Cloning dotfiles
+  ansible.builtin.git:
+    repo: "git@github.com:camiloaromero23/nvim.git"
+    dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
+    recursive: yes
+    update: yes
+    accept_hostkey: yes
+    version: main

@@ -20,6 +20,7 @@
     - include: tasks/cargo-setup.yml
     - include: tasks/ssh_setup.yml
     - include: tasks/node-setup.yml
+    - include: tasks/nvim-setup.yml
     - include: tasks/zsh_setup.yml
     - include: tasks/dotfiles-setup.yml
     - include: tasks/gpg_setup.yml
