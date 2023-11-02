@@ -34,8 +34,11 @@
     - dotfiles
     - stow
 
+- name: Trust key
+  shell: echo -e "trust\n5\ny\nsave\n" | gpg --command-fd 0 --edit-key {{email}}
+
 - name: Delete decrypted keys
-  shell: rm -rdf "{{item.path | dirname}}/decrypted/*"
+  shell: rm -rdf "{{item.path | dirname}}/decrypted/"
   with_items: "{{ vaulted_files.files }}"
 
 - name: Restart gpg-agent
