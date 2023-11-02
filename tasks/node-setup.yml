@@ -1,4 +1,4 @@
-- name: Verify Brew installation
+- name: Verify fnm installation
   shell: which fnm
   register: fnm_exists
 

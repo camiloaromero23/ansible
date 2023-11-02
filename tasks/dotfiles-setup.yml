@@ -21,6 +21,13 @@
     - dotfiles
     - stow
 
+- name: Delete possible zshenv file
+  shell: rm $HOME/.zshenv || true
+  tags:
+    - install
+    - dotfiles
+    - stow
+
 - name: Stow dotfiles
   shell: cd $HOME/dotfiles && stow --target=$HOME */
   tags:

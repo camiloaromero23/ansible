@@ -6,12 +6,12 @@
 
 - name: Install Cargo
   become: no
-  shell: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain none
+  shell: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
   when: cargo_exists.rc == 1
 
-- name: Install Rust
+- name: Re-source shell
   become: no
-  shell: rustup default stable
+  shell: source $HOME/.zshrc
   when: cargo_exists.rc == 1
 
 - name: Install Cargo packages
