@@ -16,7 +16,7 @@
     upgrade_all: true
 
 - name: Update Brew Taps
-  become_user: camilo
+  become_user: "{{username}}"
   become: no
   vars:
     brew_taps:

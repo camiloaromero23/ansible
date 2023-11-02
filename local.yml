@@ -2,6 +2,9 @@
   hosts: localhost
   # become: yes # Use sudo to gain root privileges
   vars:
+    - username: camilo
+    - git_account: camiloaromero23
+    - email: camiloaromero23@gmail.com
     - password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           39386565313131313561323562393432623965636334363361326138343831653139386635636237

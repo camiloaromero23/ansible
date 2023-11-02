@@ -10,7 +10,7 @@
 
 - name: Cloning dotfiles
   ansible.builtin.git:
-    repo: "git@github.com:camiloaromero23/dotfiles.git"
+    repo: "git@github.com:{{git_account}}/dotfiles.git"
     dest: "{{ lookup('env', 'HOME') }}/dotfiles"
     recursive: yes
     update: yes
