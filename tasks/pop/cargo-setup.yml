@@ -1,0 +1,33 @@
+- name: Verify Cargo installation
+  shell: which cargo
+  register: cargo_exists
+  ignore_errors: true
+  failed_when: cargo_exists.rc != 1 and cargo_exists.rc != 0
+
+- name: Install Cargo
+  become: no
+  shell: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+  when: cargo_exists.rc == 1
+
+- name: Add cargo to PATH
+  become: no
+  command: 'echo "export PATH=\$HOME/.cargo/bin:\$PATH" >> $HOME/.zshrc'
+  when: cargo_exists.rc == 1
+
+- name: Re-source shell
+  become: no
+  shell: . $HOME/.zshrc
+  when: cargo_exists.rc == 1
+
+- name: Install Cargo packages
+  become: no
+  vars:
+    cargo_packages:
+      - cargo-update
+      - eza
+      - fnm
+      - git-delta
+      - starship
+      - tmux-session-manager
+  community.general.cargo:
+    name: "{{ cargo_packages }}"

@@ -1,0 +1,39 @@
+- name: Add chrome gpg key
+  become: yes
+  shell: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmour -o /usr/share/keyrings/chrome-keyring.gpg
+
+- name: Add chrome ppa
+  become: yes
+  shell: sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list'
+
+- name: Download i3 keyring
+  become: no
+  shell: /usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb keyring.deb SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
+
+- name: Install i3 keyring
+  become: yes
+  shell: sudo apt install ./keyring.deb
+
+- name: Remove i3 keyring
+  become: yes
+  shell: rm ./keyring.deb
+
+- name: Append to list
+  become: yes
+  shell: echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
+
+- name: Update Apt
+  become: yes
+  apt:
+    update_cache: true
+
+- name: Install Apt packages
+  become: yes
+  vars:
+    apt_packages:
+      - google-chrome-stable
+      - i3
+  apt:
+    name: "{{ apt_packages }}"
+    state: present
+  ignore_errors: yes

@@ -1,0 +1,8 @@
+- name: Verify fnm installation
+  become: no
+  shell: which fnm
+  register: fnm_exists
+
+- name: Install Node LTS
+  become: no
+  shell: fnm install --lts

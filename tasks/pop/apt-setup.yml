@@ -1,0 +1,83 @@
+- name: Add ppas
+  become: yes
+  loop:
+    - ppa:longsleep/golang-backports
+    - ppa:neovim-ppa/unstable
+  loop_control:
+    loop_var: ppa_item
+  apt_repository:
+    validate_certs: no
+    repo: "{{ ppa_item }}"
+
+- name: Update Apt
+  become: yes
+  apt:
+    update_cache: true
+
+- name: Upgrade Apt
+  become: yes
+  apt:
+    upgrade: full
+
+- name: Install Apt packages
+  become: yes
+  vars:
+    apt_packages:
+      - bat
+      - cmake
+      - fd-find
+      - fzf
+      - git
+      - golang-go
+      - btop
+      - htop
+      - jq
+      - libssl-dev
+      - luarocks
+      - pass
+      - pass-extension-otp
+      - polybar
+      - ripgrep
+      - stow
+      - tmux
+      - zoxide
+      - zsh
+      - alacritty
+      - kitty
+  apt:
+    name: "{{ apt_packages }}"
+    state: present
+  ignore_errors: yes
+
+
+- name: Change default shell
+  shell: chsh -s $(which zsh)
+
+- name: Install deb packages
+  loop:
+    - https://discordapp.com/api/download?platform=linux&format=deb
+    - https://downloads.slack-edge.com/releases/linux/4.35.131/prod/x64/slack-desktop-4.35.131-amd64.deb
+    - https://github.com/wez/wezterm/releases/download/20230712-072601-f4abf8fd/wezterm-20230712-072601-f4abf8fd.Ubuntu22.04.deb
+    - https://go.microsoft.com/fwlink/?LinkID=760868
+  loop_control:
+    loop_var: deb_package
+  apt:
+    deb: "{{ deb_package }}"
+
+      # 
+      # - name: Install Brew casks packages
+      #   become: no
+      #   vars:
+      #     brew_casks_packages:
+      #       - discord
+      #       - firefox
+      #       - font-caskaydia-cove-nerd-font
+      #       - font-jetbrains-mono-nerd-font
+      #       - kitty
+      #       - slack
+      #       - visual-studio-code
+      #       - wezterm
+      #   homebrew_cask:
+      #     name: "{{ brew_casks_packages }}"
+      #     state: present
+      #   ignore_errors: yes

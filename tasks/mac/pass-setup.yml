@@ -1,0 +1,10 @@
+- name: Cloning password-store
+  become: no
+  ansible.builtin.git:
+    repo: "git@github.com:{{git_account}}/.password-store.git"
+    dest: "{{ lookup('env', 'HOME') }}/.password-store"
+    version: main
+  tags:
+    - install
+    - dotfiles
+    - stow

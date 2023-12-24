@@ -1,0 +1,23 @@
+- name: Verify Go installation
+  shell: which go
+  register: go_exists
+  ignore_errors: true
+  failed_when: go_exists.rc != 1 and go_exists.rc != 0
+
+- name: Add go binaries to PATH
+  become: no
+  shell: 'echo "export PATH=\$HOME/go/bin:\$PATH" >> $HOME/.zshrc'
+  when: go_exists.rc == 1
+
+- name: Re-source shell
+  become: no
+  shell: . $HOME/.zshrc
+  when: go_exists.rc == 1
+
+
+- name: Install Go Packages
+  loop:
+    - "github.com/jesseduffield/lazygit@latest"
+  loop_control:
+    loop_var: go_package
+  command: go install "{{ go_package }}"

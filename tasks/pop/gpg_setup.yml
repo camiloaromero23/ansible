@@ -1,0 +1,55 @@
+- name: Remove MacOS pinentry config
+  become: no
+  command: rm ~/.gnupg/gpg-agent.conf
+
+- name: List GPG files
+  become: no
+  ansible.builtin.find:
+    paths: ./gpg/ # Replace with the folder containing your vaulted files
+    recurse: yes
+    patterns: "*.gpg" # Adjust the file extension as needed
+  register: vaulted_files
+
+- name: Make decrypted directory
+  become: no
+  shell: cd gpg && mkdir decrypted
+
+- name: Install pexpect
+  become: no
+  command: pip3 install pexpect
+
+- name: Decrypt and move each encrypted file
+  become: no
+  expect:
+    command: ansible-vault decrypt "{{ item.path }}" --output "{{ item.path | dirname }}/decrypted/{{ item.path | basename }}"
+    responses:
+      (?i)password: "{{ password }}"
+  with_items: "{{ vaulted_files.files }}"
+  delegate_to: localhost # Ensure it's executed on the local machine
+  when: item.path is defined
+
+- name: Restart gpg-agent
+  become: no
+  shell: gpgconf --kill gpg-agent
+
+- name: Import keys
+  become: no
+  with_items: "{{ vaulted_files.files }}"
+  shell: gpg --import "{{item.path | dirname }}/decrypted/{{item.path | basename}}"
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Trust key
+  become: no
+  shell: echo -e "trust\n5\ny\nsave\n" | gpg --command-fd 0 --edit-key {{email}}
+
+- name: Delete decrypted keys
+  become: no
+  shell: rm -rdf "{{item.path | dirname}}/decrypted/"
+  with_items: "{{ vaulted_files.files }}"
+
+- name: Restart gpg-agent
+  become: no
+  shell: gpgconf --kill gpg-agent

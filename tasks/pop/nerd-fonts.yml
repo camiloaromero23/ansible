@@ -1,0 +1,63 @@
+- name: Delete already installed custom fonts
+  become: no
+  loop:
+   - CascadiaCode
+   - NerdFontsSymbolsOnly
+   - Geist.Mono
+   - JetBrainsMono
+   - CommitMono
+  loop_control:
+    loop_var: font
+  command:
+    "rm -rdf $HOME/.local/share/fonts/{{ font }}"
+
+- name: Download CommitMono Font
+  become: no
+  command:
+    "wget -P $HOME/Downloads/ https://github.com/camiloaromero23/dotfiles/files/13760360/CommitMono.zip"
+
+- name: Download GeistMono Font
+  become: no
+  command:
+    "wget -P $HOME/Downloads/ https://github.com/vercel/geist-font/releases/download/1.1.0/Geist.Mono.zip"
+
+- name: Download Nerd Fonts
+  become: no
+  loop:
+   - CascadiaCode.zip
+   - NerdFontsSymbolsOnly.zip
+   - JetBrainsMono.zip
+  loop_control:
+    loop_var: font
+  command:
+    "wget -P $HOME/Downloads/ https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/{{ font }}"
+
+- name: Create fonts folder
+  become: no
+  command: "mkdir -p $HOME/.local/share/fonts/"
+
+- name: Extract Fonts
+  become: no
+  loop:
+   - CascadiaCode
+   - NerdFontsSymbolsOnly
+   - Geist.Mono
+   - JetBrainsMono
+   - CommitMono
+  loop_control:
+    loop_var: font
+  command:
+    "unzip $HOME/Downloads/{{ font }}.zip -d $HOME/.local/share/fonts/{{ font }}"
+
+- name: Delete installed Fonts zip
+  become: no
+  loop:
+   - CascadiaCode.zip
+   - NerdFontsSymbolsOnly.zip
+   - Geist.Mono.zip
+   - JetBrainsMono.zip
+   - CommitMono.zip
+  loop_control:
+    loop_var: font
+  command:
+    "rm $HOME/Downloads/{{ font }}"

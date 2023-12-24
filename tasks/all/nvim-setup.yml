@@ -1,4 +1,5 @@
-- name: Cloning dotfiles
+- name: Cloning Nvim Repo
+  become: no
   ansible.builtin.git:
     repo: "git@github.com:camiloaromero23/nvim.git"
     dest: "{{ lookup('env', 'HOME') }}/.config/nvim"

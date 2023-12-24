@@ -6,12 +6,12 @@
     - git_account: camiloaromero23
     - email: camiloaromero23@gmail.com
     - password: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          39386565313131313561323562393432623965636334363361326138343831653139386635636237
-          3732326164656338363464626663393831363763396431370a643463666338316561306436396530
-          31356530383732353162613262373234633465353665613036623434643430663639613838633639
-          3234333438336432340a666432316338333836643834383333393833313163323566663964313961
-          32306136363537366164386534633063306438306535376130643731313139393765
+        $ANSIBLE_VAULT;1.1;AES256
+        39386565313131313561323562393432623965636334363361326138343831653139386635636237
+        3732326164656338363464626663393831363763396431370a643463666338316561306436396530
+        31356530383732353162613262373234633465353665613036623434643430663639613838633639
+        3234333438336432340a666432316338333836643834383333393833313163323566663964313961
+        32306136363537366164386534633063306438306535376130643731313139393765
   # vars_prompt:
   #   - name: password
   #     prompt: Enter your vault password
@@ -19,13 +19,37 @@
 
   become_method: sudo
   tasks:
-    - include: tasks/brew-setup.yml
-    - include: tasks/cargo-setup.yml
-    - include: tasks/ssh_setup.yml
-    - include: tasks/node-setup.yml
-    - include: tasks/nvim-setup.yml
-    - include: tasks/zsh_setup.yml
-    - include: tasks/dotfiles-setup.yml
-    - include: tasks/gpg_setup.yml
-    - include: tasks/pass-setup.yml
-# Add any other tasks as needed
+    - name: Mac Setup
+      include_tasks: "{{ mac_task }}"
+      loop:
+        - tasks/mac/brew-setup.yml
+        - tasks/mac/cargo-setup.yml
+        - tasks/mac/ssh_setup.yml
+        - tasks/mac/node-setup.yml
+        - tasks/mac/nvim-setup.yml
+        - tasks/mac/zsh_setup.yml
+        - tasks/mac/dotfiles-setup.yml
+        - tasks/mac/gpg_setup.yml
+        - tasks/mac/pass-setup.yml
+      loop_control:
+        loop_var: mac_task
+      when: ansible_distribution == "MacOSX"
+
+    - name: Pop Setup
+      include_tasks: "{{ pop_task }}"
+      loop:
+        - tasks/pop/apt-setup.yml
+        - tasks/pop/cargo-setup.yml
+        - tasks/pop/go-packages-setup.yml
+        - tasks/pop/nerd-fonts.yml
+        - tasks/all/ssh_setup.yml
+        - tasks/all/node-setup.yml
+        - tasks/all/nvim-setup.yml
+        - tasks/all/zsh_setup.yml
+        - tasks/all/dotfiles-setup.yml
+        - tasks/pop/gpg_setup.yml
+        - tasks/all/pass-setup.yml
+        - tasks/pop/custom_ppas.yml
+      loop_control:
+        loop_var: pop_task
+      when: ansible_distribution != "Pop!_OS"
