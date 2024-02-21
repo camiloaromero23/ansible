@@ -14,7 +14,7 @@
 - name: Download CommitMono Font
   become: no
   command:
-    "wget -P $HOME/Downloads/ https://github.com/camiloaromero23/dotfiles/files/13760360/CommitMono.zip"
+    "wget -P $HOME/Downloads/ https://github.com/camiloaromero23/dotfiles/files/14352367/Commit.Mono.zip"
 
 - name: Download GeistMono Font
   become: no
