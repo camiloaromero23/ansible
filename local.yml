@@ -35,6 +35,24 @@
         loop_var: mac_task
       when: ansible_distribution == "MacOSX"
 
+    - name: Arco Setup
+      include_tasks: "{{ arco_task }}"
+      loop:
+        - tasks/arco/pacman.yml
+        - tasks/arco/paru.yml
+        - tasks/pop/nerd-fonts.yml
+        - tasks/pop/cargo-setup.yml
+        - tasks/all/ssh_setup.yml
+        - tasks/all/node-setup.yml
+        - tasks/all/nvim-setup.yml
+        - tasks/all/zsh_setup.yml
+        - tasks/all/dotfiles-setup.yml
+        - tasks/pop/gpg_setup.yml
+        - tasks/all/pass-setup.yml
+      loop_control:
+        loop_var: arco_task
+      when: ansible_distribution == "Archlinux"
+
     - name: Pop Setup
       include_tasks: "{{ pop_task }}"
       loop:
@@ -52,4 +70,4 @@
         - tasks/pop/custom_ppas.yml
       loop_control:
         loop_var: pop_task
-      when: ansible_distribution != "Pop!_OS"
+      when: ansible_distribution == "Pop!_OS"

@@ -43,7 +43,7 @@
    - NerdFontsSymbolsOnly
    - Geist.Mono
    - JetBrainsMono
-   - CommitMono
+   - Commit.Mono
   loop_control:
     loop_var: font
   command:
@@ -56,7 +56,7 @@
    - NerdFontsSymbolsOnly.zip
    - Geist.Mono.zip
    - JetBrainsMono.zip
-   - CommitMono.zip
+   - Commit.Mono.zip
   loop_control:
     loop_var: font
   command:

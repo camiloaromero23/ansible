@@ -1,0 +1,37 @@
+- name: Install Pacman packages
+  become: yes
+  vars:
+    pacman_packages:
+      - alacritty
+      - bat
+      - btop
+      - cmake
+      - discord
+      - fd
+      - fzf
+      - git
+      - go
+      - htop
+      # - i3
+      - jq
+      - kitty
+      - lazygit
+      - luarocks
+      - pass
+      - pass-otp
+      - polybar
+      - ripgrep
+      - stow
+      - tmux
+      - ttf-nerd-fonts-symbols-mono
+      - wezterm
+      - zoxide
+      - zsh
+  pacman:
+    name: "{{ pacman_packages }}"
+    state: present
+  ignore_errors: yes
+
+
+- name: Change default shell
+  shell: chsh -s $(which zsh)

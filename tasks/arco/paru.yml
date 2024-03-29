@@ -1,0 +1,10 @@
+- name: Verify Paru installation
+  shell: which paru
+  register: paru_exists
+  ignore_errors: true
+  failed_when: paru_exists.rc != 1 and paru_exists.rc != 0
+
+- name: Install Paru packages
+  become: yes
+  shell: yes | paru -S visual-studio-code-bin slack-desktop google-chrome
+  when: paru_exists.rc == 1
