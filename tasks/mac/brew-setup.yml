@@ -54,6 +54,7 @@
       - pass-update
       - pinentry-mac
       - ripgrep
+      - silicon
       - koekeishiya/formulae/skhd
       - starship
       - stow
