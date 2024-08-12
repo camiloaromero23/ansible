@@ -71,16 +71,19 @@
   vars:
     brew_casks_packages:
       - alacritty
-      - amethyst
+      # - amethyst
       - arc
       - discord
       - firefox
       - font-caskaydia-cove-nerd-font
       - font-jetbrains-mono-nerd-font
       # - jetbrains-toolbox
+      - karabiner-elements
       - keycastr
       - kitty
       # - logi-options-plus
+      - nikitabobko/tap/aerospace
+      - obsidian
       - raycast
       - stats
       - slack
