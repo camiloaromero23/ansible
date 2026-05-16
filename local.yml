@@ -22,13 +22,12 @@
     - name: Mac Setup
       include_tasks: "{{ mac_task }}"
       loop:
+        - tasks/mac/dotfiles-setup.yml
         - tasks/mac/brew-setup.yml
-        - tasks/mac/cargo-setup.yml
         - tasks/mac/ssh_setup.yml
         - tasks/mac/node-setup.yml
         - tasks/mac/nvim-setup.yml
         - tasks/mac/zsh_setup.yml
-        - tasks/mac/dotfiles-setup.yml
         - tasks/mac/gpg_setup.yml
         - tasks/mac/pass-setup.yml
       loop_control:

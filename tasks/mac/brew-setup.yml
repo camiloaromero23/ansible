@@ -15,82 +15,17 @@
     update_homebrew: true
     upgrade_all: true
 
-- name: Update Brew Taps
-  become_user: "{{username}}"
+- name: Verify Brewfile exists in dotfiles repo
   become: no
-  vars:
-    brew_taps:
-      - simplydanny/pass-extensions
-      - homebrew/cask-fonts
-  homebrew_tap:
-    name: "{{ brew_taps }}"
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/dotfiles/Brewfile"
+  register: brewfile
 
-- name: Install Neovim from Brew
+- name: Install Brew packages from dotfiles Brewfile
   become: no
-  homebrew:
-    name: neovim
-    state: head
-  ignore_errors: yes
-
-- name: Install Brew packages
-  become: no
-  vars:
-    brew_packages:
-      - bat
-      - eza
-      - fd
-      - fnm
-      - fzf
-      - git
-      - git-delta
-      - go
-      - btop
-      - htop
-      - jq
-      - lazygit
-      - luarocks
-      - pass
-      - pass-otp
-      - pass-update
-      - pinentry-mac
-      - ripgrep
-      - silicon
-      - koekeishiya/formulae/skhd
-      - starship
-      - stow
-      - tmux
-      - zbar
-      - zoxide
-  homebrew:
-    name: "{{ brew_packages }}"
-    state: present
-  ignore_errors: yes
-
-- name: Install Brew casks packages
-  become: no
-  vars:
-    brew_casks_packages:
-      - alacritty
-      # - amethyst
-      - arc
-      - discord
-      - firefox
-      - font-caskaydia-cove-nerd-font
-      - font-jetbrains-mono-nerd-font
-      # - jetbrains-toolbox
-      - karabiner-elements
-      - keycastr
-      - kitty
-      # - logi-options-plus
-      - nikitabobko/tap/aerospace
-      - obsidian
-      - raycast
-      - stats
-      - slack
-      - visual-studio-code
-      - wezterm
-      - whatsapp
-  homebrew_cask:
-    name: "{{ brew_casks_packages }}"
-    state: present
-  ignore_errors: yes
+  command:
+    argv:
+      - brew
+      - bundle
+      - --file={{ lookup('env', 'HOME') }}/dotfiles/Brewfile
+  when: brewfile.stat.exists
