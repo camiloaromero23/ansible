@@ -1,0 +1,4 @@
+[tools]
+uv = "latest"
+python = "3.11"
+ansible-core = "2.22.0"
